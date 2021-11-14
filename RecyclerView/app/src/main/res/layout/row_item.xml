@@ -5,14 +5,6 @@
         <variable
             name="item"
             type="com.zerir.recyclerview.ListItem" />
-
-        <variable
-            name="position"
-            type="Integer" />
-
-        <variable
-            name="listener"
-            type="com.zerir.recyclerview.OnItemClickListener" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +23,6 @@
             android:id="@+id/item_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> listener.onItemClicked(item, position)}"
             android:orientation="vertical">
 
             <TextView
