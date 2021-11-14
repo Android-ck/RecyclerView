@@ -4,25 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import com.zerir.recyclerview.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
 
-    private lateinit var listRv: RecyclerView
+    private lateinit var binding: ActivityMainBinding
 
     private val list = mutableListOf<ListItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         list.addAll(loadDataManual())
-
-        listRv = findViewById(R.id.list_rv)
-        listRv.setHasFixedSize(true)
-        listRv.layoutManager = LinearLayoutManager(this)
-        listRv.adapter = setupAdapter(list, this)
+        binding.adapter = setupAdapter(list, this)
     }
 
     override fun onItemClicked(item: ListItem, position: Int) {
