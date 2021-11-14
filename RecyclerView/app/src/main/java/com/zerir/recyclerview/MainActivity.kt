@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener, SwipeToDoAction {
 
     private fun updateAndUpdateUi(position: Int) {
         val oldItem = adapter.currentList[position]
-        val newItem = oldItem.copy(head = "new head")
+        val newItem = oldItem.copyWithSameId(head = "new head")
         val list = ArrayList(adapter.currentList)
         list.remove(oldItem)
         list.add(position, newItem)
