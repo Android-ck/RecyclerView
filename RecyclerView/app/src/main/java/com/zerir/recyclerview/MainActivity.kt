@@ -2,10 +2,12 @@ package com.zerir.recyclerview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private lateinit var listRv: RecyclerView
 
@@ -20,12 +22,17 @@ class MainActivity : AppCompatActivity() {
         listRv = findViewById(R.id.list_rv)
         listRv.setHasFixedSize(true)
         listRv.layoutManager = LinearLayoutManager(this)
-        listRv.adapter = setupAdapter(list)
-
+        listRv.adapter = setupAdapter(list, this)
     }
 
-    private fun setupAdapter(list: List<ListItem>): ListAdapter {
-        return ListAdapter(list)
+    override fun onItemClicked(item: ListItem, position: Int) {
+        val message = "Item #$position Clicked!\nH: ${item.head}, D: ${item.desc}"
+        Log.d("Item", message)
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun setupAdapter(list: List<ListItem>, onItemClickListener: OnItemClickListener): ListAdapter {
+        return ListAdapter(list, onItemClickListener)
     }
 
     private fun loadDataManual() : List<ListItem> {

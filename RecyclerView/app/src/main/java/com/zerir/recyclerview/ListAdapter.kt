@@ -7,7 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ListAdapter(
-    private val list: List<ListItem>
+    private val list: List<ListItem>,
+    private val onItemClickListener: OnItemClickListener,
 ) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -17,9 +18,8 @@ class ListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val head = list[position].head
-        val desc = list[position].desc
-        holder.bind(head, desc)
+        val item = list[position]
+        holder.bind(item, position, onItemClickListener)
     }
 
     override fun getItemCount(): Int = list.size
@@ -30,11 +30,28 @@ class ListAdapter(
         private val headTv = view.findViewById<TextView>(R.id.head_tv)
         private val descTv = view.findViewById<TextView>(R.id.desc_tv)
 
-        fun bind(head: String, desc: String) {
-            headTv.text = head
-            descTv.text = desc
+        private lateinit var onItemClickListener: OnItemClickListener
+        private lateinit var item: ListItem
+        private var itemPosition: Int = 0
+
+        init {
+            view.setOnClickListener {
+                onItemClickListener.onItemClicked(item = item, position = itemPosition)
+            }
         }
 
+        fun bind(item: ListItem, position: Int, onItemClickListener: OnItemClickListener) {
+            this.item = item
+            this.onItemClickListener = onItemClickListener
+
+            this.headTv.text = item.head
+            this.descTv.text = item.desc
+            this.itemPosition = position
+        }
     }
 
+}
+
+interface OnItemClickListener {
+    fun onItemClicked(item: ListItem, position: Int)
 }
