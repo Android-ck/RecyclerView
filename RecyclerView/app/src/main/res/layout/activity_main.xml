@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"
             app:adapter="@{adapter}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:spanCount="3"
             tools:itemCount="3"
             tools:listitem="@layout/row_details_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>

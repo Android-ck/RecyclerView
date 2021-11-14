@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import com.zerir.recyclerview.databinding.ActivityMainBinding
 import kotlin.collections.ArrayList
 
@@ -31,6 +32,21 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, item.name, Toast.LENGTH_LONG).show()
                 } },
         )
+
+        //random dynamic width
+        val layoutManager = GridLayoutManager(this, 4)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (position % 4) {
+                    0 -> 1
+                    1 -> 2
+                    3 -> 3
+                    4 -> 4
+                    else -> 4
+                }
+            }
+        }
+        binding.listRv.layoutManager = layoutManager
 
         binding.adapter = adapter
 
