@@ -1,64 +1,61 @@
 package com.zerir.recyclerview
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.zerir.recyclerview.databinding.RowItemBinding
+import java.lang.IllegalArgumentException
 
 class ListAdapter(
-    private val onItemClickListener: OnItemClickListener,
-) : ListAdapter<ListItem, RecyclerView.ViewHolder>(ItemDiffUtils()) {
+    private val listenOnTitle: OnItemClickListener<ListTypeItem.ListItemTitle>? = null,
+    private val listenOnImage: OnItemClickListener<ListTypeItem.ListItemImage>? = null,
+    private val listenOnDetails: OnItemClickListener<ListTypeItem.ListItemDetails>? = null,
+) : ListAdapter<ListTypeItem, RecyclerView.ViewHolder>(ItemDiffUtils()) {
+
+    override fun getItemViewType(position: Int): Int {
+        return when(getItem(position)) {
+            is ListTypeItem.ListItemTitle -> R.layout.row_title_item
+            is ListTypeItem.ListItemImage -> R.layout.row_image_item
+            is ListTypeItem.ListItemDetails -> R.layout.row_details_item
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val context = parent.context
-        val layoutInflater = LayoutInflater.from(context)
-        val binding = RowItemBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(binding)
+        return when(viewType) {
+            R.layout.row_title_item -> ViewHolder.TitleViewHolder.from(parent)
+            R.layout.row_image_item -> ViewHolder.ImageViewHolder.from(parent)
+            R.layout.row_details_item -> ViewHolder.DetailsViewHolder.from(parent)
+            else -> throw IllegalArgumentException("Invalid ViewType")
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ViewHolder -> {
-                val item = getItem(position)
-                holder.bind(item, onItemClickListener)
+            is ViewHolder.TitleViewHolder -> {
+                val item = getItem(position) as ListTypeItem.ListItemTitle
+                holder.bind(item, listenOnTitle)
             }
-        }
-    }
-
-    class ViewHolder(private val binding: RowItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        private lateinit var onItemClickListener: OnItemClickListener
-
-        init {
-            binding.root.setOnClickListener {
-                val position = absoluteAdapterPosition
-                onItemClickListener.onItemClicked(position = position)
+            is ViewHolder.ImageViewHolder -> {
+                val item = getItem(position) as ListTypeItem.ListItemImage
+                holder.bind(item, listenOnImage)
             }
-        }
-
-        fun bind(item: ListItem, onItemClickListener: OnItemClickListener) {
-            binding.item = item
-            this.onItemClickListener = onItemClickListener
+            is ViewHolder.DetailsViewHolder -> {
+                val item = getItem(position) as ListTypeItem.ListItemDetails
+                holder.bind(item, listenOnDetails)
+            }
         }
     }
 
 }
 
-class ItemDiffUtils : DiffUtil.ItemCallback<ListItem>() {
+class ItemDiffUtils : DiffUtil.ItemCallback<ListTypeItem>() {
 
-    override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
+    override fun areItemsTheSame(oldItem: ListTypeItem, newItem: ListTypeItem): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-        return oldItem.head == newItem.head &&
-                oldItem.desc == newItem.desc
+    override fun areContentsTheSame(oldItem: ListTypeItem, newItem: ListTypeItem): Boolean {
+        return oldItem == oldItem
     }
 
-}
-
-interface OnItemClickListener {
-    fun onItemClicked(position: Int)
 }

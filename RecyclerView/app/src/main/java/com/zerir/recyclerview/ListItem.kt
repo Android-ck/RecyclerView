@@ -2,16 +2,19 @@ package com.zerir.recyclerview
 
 import java.util.*
 
-data class ListItem(
-    val id: String = UUID.randomUUID().toString(),
-    var head: String,
-    val desc: String,
-) {
+sealed class ListTypeItem(val id: String) {
 
-    fun copyWithSameId(head: String = this.head, desc: String = this.desc): ListItem = ListItem(
-        id = this.id,
-        head = head,
-        desc = desc
-    )
+    data class ListItemTitle(
+        val title: String,
+    ): ListTypeItem(UUID.randomUUID().toString())
 
+    data class ListItemImage(
+        val imageResource: Int,
+    ): ListTypeItem(UUID.randomUUID().toString())
+
+    data class ListItemDetails(
+        val name: String,
+        val desc: String,
+        val logoResource: Int
+    ): ListTypeItem(UUID.randomUUID().toString())
 }

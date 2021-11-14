@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="item"
-            type="com.zerir.recyclerview.ListItem" />
+            type="com.zerir.recyclerview.ListTypeItem.ListItemDetails" />
     </data>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="@color/black"
-        app:cardCornerRadius="12dp">
+        android:background="@color/black"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@null"
+            android:background="@android:color/darker_gray"
+            app:imageResource="@{item.logoResource}"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_launcher_foreground" />
 
         <LinearLayout
-            android:id="@+id/item_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/head_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.head}"
                 android:maxLines="1"
                 android:padding="8dp"
+                android:text="@{item.name}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                tools:text="Heading" />
+                tools:text="Omar Zerir" />
 
             <TextView
-                android:id="@+id/desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.desc}"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="8dp"
+                android:text="@{item.desc}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="normal"
-                tools:text="Description" />
+                tools:text="Android Developer" />
         </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </layout>

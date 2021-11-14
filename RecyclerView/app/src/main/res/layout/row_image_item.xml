@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.zerir.recyclerview.ListTypeItem.ListItemImage" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="180dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@android:color/darker_gray"
+            android:contentDescription="@null"
+            app:imageResource="@{item.imageResource}"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_launcher_foreground" />
+
+    </androidx.cardview.widget.CardView>
+</layout>

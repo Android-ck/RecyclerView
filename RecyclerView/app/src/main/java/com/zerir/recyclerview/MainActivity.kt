@@ -2,13 +2,12 @@ package com.zerir.recyclerview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.zerir.recyclerview.databinding.ActivityMainBinding
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), OnItemClickListener, SwipeToDoAction {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -18,78 +17,50 @@ class MainActivity : AppCompatActivity(), OnItemClickListener, SwipeToDoAction {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        adapter = setupAdapter(this)
+        adapter = ListAdapter(
+            listenOnTitle = object: OnItemClickListener<ListTypeItem.ListItemTitle> {
+                override fun onItemClicked(item: ListTypeItem.ListItemTitle, position: Int) {
+                    Toast.makeText(this@MainActivity, item.title, Toast.LENGTH_LONG).show()
+                } },
+            listenOnImage = object: OnItemClickListener<ListTypeItem.ListItemImage> {
+                override fun onItemClicked(item: ListTypeItem.ListItemImage, position: Int) {
+                    Toast.makeText(this@MainActivity, "image ${item.imageResource}", Toast.LENGTH_LONG).show()
+                } },
+            listenOnDetails = object: OnItemClickListener<ListTypeItem.ListItemDetails> {
+                override fun onItemClicked(item: ListTypeItem.ListItemDetails, position: Int) {
+                    Toast.makeText(this@MainActivity, item.name, Toast.LENGTH_LONG).show()
+                } },
+        )
 
         binding.adapter = adapter
-        binding.action = this
 
         adapter.submitList(loadDataManual())
     }
 
-    override fun onItemClicked(position: Int) {
-        val item = adapter.currentList[position]
-        val message = "Item #$position ${item.id} Clicked!\nH: ${item.head}, D: ${item.desc}"
-        Log.d("Item", message)
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    private fun loadDataManual(): List<ListTypeItem> {
+        val list = ArrayList<ListTypeItem>()
 
-        // add new item
-        if(position % 2 == 0) addAndUpdateUi()
-        // update header
-        else updateAndUpdateUi(position)
-    }
-
-    override fun action(position: Int) {
-        deleteAndUpdateUi(position)
-    }
-
-    private fun updateAndUpdateUi(position: Int) {
-        val oldItem = adapter.currentList[position]
-        val newItem = oldItem.copyWithSameId(head = "new head")
-        val list = ArrayList(adapter.currentList)
-        list.remove(oldItem)
-        list.add(position, newItem)
-        adapter.submitList(list)
-    }
-
-    private fun addAndUpdateUi() {
-        val index = adapter.itemCount + 1
-        val item = ListItem(
-            head = "Head $index",
-            desc = "Some description of input $index",
-        )
-        val list = ArrayList(adapter.currentList)
-        list.add(item)
-        adapter.submitList(list)
-    }
-
-    private fun deleteAndUpdateUi(position: Int) {
-        //delete if only odd number
-        if(position % 2 != 0) {
-            val list = ArrayList(adapter.currentList)
-            list.removeAt(position)
-            adapter.submitList(list)
-        }
-        // reverse the swipe
-        else {
-            adapter.notifyItemChanged(position)
-        }
-    }
-
-    private fun setupAdapter(onItemClickListener: OnItemClickListener): ListAdapter {
-        return ListAdapter(onItemClickListener)
-    }
-
-    private fun loadDataManual() : List<ListItem> {
-        val listItem = ArrayList<ListItem>()
-        for (index in 1..3) {
-            listItem.add(
-                ListItem(
-                    head = "Head $index",
-                    desc = "Some description of input $index",
+        for (index in 1..15) {
+            val title = ListTypeItem.ListItemTitle(title = "title $index")
+            val images = ArrayList<ListTypeItem.ListItemImage>()
+            for(i in 1..index % 5){
+                images.add(
+                    ListTypeItem.ListItemImage(
+                        imageResource = R.drawable.ic_launcher_foreground
+                    )
                 )
+            }
+            val details = ListTypeItem.ListItemDetails(
+                name = "name $index",
+                desc = "some description of $index",
+                logoResource = R.drawable.ic_launcher_foreground
             )
+            list.add(title)
+            list.addAll(images)
+            list.add(details)
         }
-        return listItem
+
+        return list
     }
 
 }
